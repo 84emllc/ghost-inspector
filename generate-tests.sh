@@ -214,15 +214,6 @@ if [[ "$import_confirm" != "y" && "$import_confirm" != "Y" ]]; then
     exit 0
 fi
 
-# Get Suite ID
-echo ""
-read -p "Enter Suite ID: " suite_id
-
-if [[ -z "$suite_id" ]]; then
-    echo "Error: Suite ID is required."
-    exit 1
-fi
-
 # Get API Key (hidden input)
 echo ""
 read -s -p "Enter API Key: " api_key
@@ -231,6 +222,66 @@ echo ""
 if [[ -z "$api_key" ]]; then
     echo "Error: API Key is required."
     exit 1
+fi
+
+# Fetch and display suites
+echo ""
+echo "Fetching suites from Ghost Inspector..."
+
+suites_response=$(curl -s "https://api.ghostinspector.com/v1/suites/?apiKey=${api_key}")
+
+# Check for valid response
+if ! echo "$suites_response" | grep -q '"code":"SUCCESS"'; then
+    echo "Error: Failed to fetch suites. Check your API key."
+    exit 1
+fi
+
+# Parse suites into arrays using jq
+suite_ids=()
+suite_names=()
+
+while IFS= read -r line; do
+    suite_ids+=("$line")
+done < <(echo "$suites_response" | jq -r '.data[]._id')
+
+while IFS= read -r line; do
+    suite_names+=("$line")
+done < <(echo "$suites_response" | jq -r '.data[].name')
+
+if [[ ${#suite_ids[@]} -eq 0 ]]; then
+    echo "Error: No suites found in your account."
+    exit 1
+fi
+
+echo ""
+echo "Available suites:"
+echo "-----------------"
+
+for i in "${!suite_ids[@]}"; do
+    echo "  $((i + 1))) ${suite_names[$i]} (${suite_ids[$i]})"
+done
+
+echo ""
+read -p "Select suite [1-${#suite_ids[@]}]: " suite_choice
+
+# Validate choice
+if [[ -z "$suite_choice" ]] || ! [[ "$suite_choice" =~ ^[0-9]+$ ]] || [[ "$suite_choice" -lt 1 ]] || [[ "$suite_choice" -gt ${#suite_ids[@]} ]]; then
+    echo "Error: Invalid selection."
+    exit 1
+fi
+
+suite_id="${suite_ids[$((suite_choice - 1))]}"
+suite_name="${suite_names[$((suite_choice - 1))]}"
+
+echo ""
+echo "Selected: ${suite_name} (${suite_id})"
+echo ""
+read -p "Import ${#created_files[@]} test(s) to this suite? (y/n): " final_confirm
+
+if [[ "$final_confirm" != "y" && "$final_confirm" != "Y" ]]; then
+    echo ""
+    echo "Import cancelled. Files were still created."
+    exit 0
 fi
 
 # Import each file
