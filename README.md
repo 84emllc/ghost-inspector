@@ -26,6 +26,15 @@ The script will guide you through:
 6. **Notes Generation** - Creates `_notes.txt` per domain with run history and settings
 7. **API Import** (optional) - Import tests directly to a Ghost Inspector suite
 
+## Example Run
+
+See **[example.txt](example.txt)** for a complete example run showing:
+- Valid and invalid URLs
+- Duplicate URL handling
+- Domain organization output
+- _notes.txt generation
+- API import flow
+
 ## Output Structure
 
 Files are organized by domain in the `build/` directory:

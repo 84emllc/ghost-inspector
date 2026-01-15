@@ -11,9 +11,34 @@ This project provides a bash script for generating Ghost Inspector visual regres
 - `generate-tests.sh` - Main script for generating tests and importing to Ghost Inspector (v1.0.0)
 - `templates/template.json` - Default test template with `TEST_NAME` and `START_URL` placeholders
 - `templates/template.md` - Comprehensive guide to all template settings and customization
+- `example.txt` - Complete example run demonstrating all features and workflows
 - `build/` - Output directory for generated test files (organized by domain)
 - `VERSION` - Current semantic version
 - `CHANGELOG.md` - Changelog following Keep a Changelog format
+
+## Example Walkthrough
+
+**File:** `example.txt`
+
+Comprehensive walkthrough demonstrating:
+
+- **Complete Script Flow**: Shows entire interactive session from start to finish
+- **Input Validation**: Examples of invalid URL rejection, duplicate URL detection, whitespace trimming
+- **Domain Organization**: Output structure with multiple domains in single run
+- **Warnings & Feedback**: All warning messages (invalid URLs, duplicates, overwrites)
+- **File Generation**: Creation of JSON tests and _notes.txt per domain
+- **Notes File Contents**: Sample markdown output showing all configuration details
+- **API Import**: Dynamic suite fetching, selection, and import status
+- **Success Summary**: Final statistics on created and imported tests
+
+Use this example to understand:
+- How validation handles problematic inputs
+- How domain organization groups tests
+- What _notes.txt contains and why it's useful
+- How API import workflow functions
+- Expected output and error messages
+
+See `example.txt` in root directory or linked in README.md.
 
 ## URL to Filename Convention
 
