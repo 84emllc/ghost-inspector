@@ -1,14 +1,18 @@
 # Ghost Inspector Test Generator
 
+**Version:** 1.0.0 | **Semver:** ✓ | **Changelog:** CHANGELOG.md
+
 ## Overview
 
 This project provides a bash script for generating Ghost Inspector visual regression test JSON files from a list of URLs, with optional API import.
 
 ## Key Files
 
-- `generate-tests.sh` - Main script for generating tests and importing to Ghost Inspector
+- `generate-tests.sh` - Main script for generating tests and importing to Ghost Inspector (v1.0.0)
 - `templates/template.json` - Default test template with `TEST_NAME` and `START_URL` placeholders
 - `build/` - Output directory for generated test files (organized by domain)
+- `VERSION` - Current semantic version
+- `CHANGELOG.md` - Changelog following Keep a Changelog format
 
 ## URL to Filename Convention
 

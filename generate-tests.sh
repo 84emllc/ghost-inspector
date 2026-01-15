@@ -2,6 +2,7 @@
 
 # Ghost Inspector Test Generator
 # Generates test JSON files from URLs and optionally imports them via API
+# Version: 1.0.0
 
 set -e
 
