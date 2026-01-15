@@ -80,6 +80,7 @@ Generating notes...
 Import tests to Ghost Inspector suite? (y/n): y
 
 Enter API Key:
+(input is hidden - type your API key and press Enter - characters will not appear on screen)
 
 Fetching suites from Ghost Inspector...
 
@@ -209,3 +210,85 @@ Key Points from This Example
    - Reports invalid/duplicate URLs
    - Proceeds with valid URLs
    - No silent failures
+
+7. API KEY SECURITY
+   - API key input is hidden (silent mode)
+   - Characters do not appear on screen while typing
+   - Key never stored in script, config files, or history
+   - Only transmitted securely to Ghost Inspector API
+   - Safely discarded after API session
+
+
+Security Practices for API Keys
+================================
+
+SECURE APPROACH (What This Script Does)
+========================================
+
+✓ Interactive Prompt - User pastes API key when needed
+✓ Hidden Input - Key typed with `-s` flag (no echo to terminal)
+✓ No Storage - Key exists only in memory during session
+✓ No History - Key not saved to shell history
+✓ No Logs - Key never written to log files
+✓ Session-Only - Key discarded after API import completes
+
+Benefits:
+- Prevents accidental key exposure
+- Key not stored on disk
+- No lingering key in shell history
+- Easy to revoke key if compromised
+- No configuration file vulnerabilities
+
+
+INSECURE APPROACH (DON'T DO THIS)
+==================================
+
+✗ Hardcoding - Never put API key directly in script:
+   api_key="your-secret-key-here"  # BAD!
+
+✗ Config Files - Never store in plaintext config:
+   API_KEY=sk_live_abc123  # BAD!
+
+✗ Environment Variables - Global env vars can be accessed:
+   export GHOST_INSPECTOR_API_KEY="..."  # RISKY
+
+✗ Command Arguments - Never pass as CLI argument:
+   ./script.sh --api-key=secret123  # BAD!
+
+Risks:
+- Key visible in version control (GitHub, Git history)
+- Key visible in shell history (history command)
+- Key readable by other users if shared script
+- Key exposed in process listing (ps aux)
+- Key leaked if system compromised
+- Key visible in logs/backups
+- Difficult to rotate key securely
+
+
+Best Practices
+==============
+
+1. Use Interactive Input
+   - Let script prompt for sensitive data
+   - User controls when key is entered
+   - Key never persists on disk
+
+2. When Sharing Scripts
+   - Never include API keys in scripts
+   - Document that script will prompt for key
+   - Provide example without credentials
+
+3. For CI/CD Pipelines
+   - Use CI/CD secret management (GitHub Secrets, GitLab CI/CD Variables)
+   - CI/CD platform handles secure storage and injection
+   - Never commit secrets to repository
+
+4. Key Rotation
+   - Periodically regenerate API keys
+   - Immediately revoke compromised keys
+   - Easy to revoke with interactive-only approach
+
+5. Terminal Safety
+   - Clear terminal after script runs
+   - Don't share terminal screenshots with keys visible
+   - Use `clear` or `reset` command to wipe screen

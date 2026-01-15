@@ -168,6 +168,30 @@ To export existing test configurations as JSON for use with this script:
 
 See [assets/screenshot-export-test.png](assets/screenshot-export-test.png) for visual walkthrough.
 
+## API Key Security
+
+When importing tests to Ghost Inspector, the script prompts for your API key:
+
+```
+Enter API Key:
+(input is hidden - type your API key and press Enter)
+```
+
+**Key features:**
+- API key input is **hidden** (characters don't appear on screen)
+- Key is **never stored** in script, config files, or shell history
+- Key exists only in **memory during the session**
+- Key is **securely transmitted** to Ghost Inspector API
+- Key is **safely discarded** after import completes
+
+**Security practices:**
+- ✓ Use interactive prompts (don't hardcode keys)
+- ✓ Never commit API keys to version control
+- ✗ Never store keys in plaintext config files
+- ✗ Never pass keys as command arguments
+
+For detailed security practices and explanations, see `example.txt` (section: "Security Practices for API Keys").
+
 ## License
 
 MIT

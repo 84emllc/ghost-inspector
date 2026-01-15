@@ -155,6 +155,100 @@ The script includes comprehensive input validation:
 | Whitespace in URLs | Automatically trims leading/trailing whitespace |
 | File overwrites | Shows `[OVERWRITE]` warning for existing files |
 
+## API Key Security
+
+**Implementation:** `read -s -p "Enter API Key: " api_key`
+
+The script uses bash's `-s` flag (silent mode) for secure API key input.
+
+**How It Works:**
+
+1. **Interactive Prompt** - User enters API key when needed
+   - Not required until import flow initiated (optional feature)
+   - User controls timing and flow
+
+2. **Hidden Input** - Characters not echoed to terminal
+   - Typed characters don't appear on screen
+   - Prevents shoulder-surfing/visual exposure
+   - Terminal shows only prompt, no feedback
+
+3. **Memory-Only Storage** - Key never persists on disk
+   - Variable exists only in shell memory during session
+   - Not written to files, logs, or backups
+   - Not saved to shell history (history only shows command, not input)
+
+4. **Secure Transmission** - Direct API call via curl
+   - Key sent directly in API request to Ghost Inspector
+   - HTTPS encryption protects in-transit
+   - No intermediate storage or caching
+
+5. **Session Cleanup** - Key discarded after use
+   - Variable destroyed when script ends
+   - No lingering traces on system
+   - Easy to revoke key if compromised
+
+**Why This Approach:**
+
+✓ **Prevents Accidental Exposure** - Not stored where it could be leaked
+✓ **Revocation-Friendly** - Can immediately invalidate key if needed
+✓ **Version Control Safe** - Can safely commit script to GitHub
+✓ **User Control** - User decides when to provide key
+✓ **No Configuration Hell** - No config files to manage/protect
+
+**What NOT to Do:**
+
+✗ **Hardcoding** - Never embed key in script
+   ```bash
+   api_key="sk_live_abc123"  # WRONG
+   ```
+   Risks: Visible in version control, readable by all users
+
+✗ **Config Files** - Never store in `.env` or config files
+   ```
+   API_KEY=sk_live_abc123  # WRONG
+   ```
+   Risks: File-level permissions hard to manage, committed accidentally
+
+✗ **Command Arguments** - Never pass as CLI flag
+   ```bash
+   ./script.sh --api-key=secret123  # WRONG
+   ```
+   Risks: Visible in `ps aux`, shell history, process monitoring
+
+✗ **Environment Variables (Global)** - Global env vars accessible to all processes
+   ```bash
+   export GHOST_INSPECTOR_KEY="..."  # RISKY
+   ```
+   Risks: Any process can read environment, persists in shell config
+
+**Best Practices:**
+
+1. **Rotate Keys Regularly** - Periodically regenerate API keys
+2. **Revoke Immediately** - If key is compromised, revoke immediately
+3. **Use CI/CD Secrets** - For automation, use platform-specific secret management
+   - GitHub Secrets for GitHub Actions
+   - GitLab CI/CD Variables for GitLab CI
+   - AWS Secrets Manager for AWS Lambda
+4. **Terminal Hygiene** - Clear terminal after script runs (`clear` command)
+5. **Share Without Secrets** - When sharing scripts, remove any credentials
+6. **Document Expectations** - Document that script will prompt for sensitive input
+
+**For CI/CD Integration:**
+
+Do NOT hardcode keys. Instead:
+
+GitHub Actions example:
+```yaml
+- name: Generate tests
+  run: ./generate-tests.sh
+  env:
+    GHOST_INSPECTOR_API_KEY: ${{ secrets.GHOST_INSPECTOR_API_KEY }}
+```
+
+Then modify script to read from environment variable if needed (currently requires interactive input by design).
+
+See `example.txt` for comprehensive security guide and comparison of secure vs. insecure approaches.
+
 ## Dependencies
 
 - `bash`
