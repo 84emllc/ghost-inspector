@@ -7,7 +7,8 @@ This project provides a bash script for generating Ghost Inspector visual regres
 ## Key Files
 
 - `generate-tests.sh` - Main script for generating tests and importing to Ghost Inspector
-- `template.json` - Default test template with `TEST_NAME` and `START_URL` placeholders
+- `templates/template.json` - Default test template with `TEST_NAME` and `START_URL` placeholders
+- `build/` - Output directory for generated test files (organized by domain)
 
 ## URL to Filename Convention
 
@@ -21,18 +22,59 @@ This project provides a bash script for generating Ghost Inspector visual regres
 - Filenames: path segments joined with `_`, capitalized, hyphens preserved
 - Test names: path segments joined with ` / `, hyphens replaced with spaces
 
+## Output Structure
+
+Test files are organized by domain in the `build/` directory. Each domain folder includes a `_notes.txt` markdown file with run history and settings:
+
+```
+build/
+├── example.com/
+│   ├── _notes.txt
+│   ├── Home.json
+│   └── About.json
+└── other-site.com/
+    ├── _notes.txt
+    └── Contact.json
+```
+
+### Notes File Contents
+
+Each `_notes.txt` includes:
+- Last run timestamp
+- Template used
+- Tests table (file, name, URL)
+- All template settings (screenshot compare, thresholds, browser, viewport, etc.)
+- HTTP headers (if any)
+- Steps with commands
+
 ## Script Flow
 
 1. Template selection (use `template.json` or paste custom)
 2. Collect URLs from user (one per line, blank line to finish)
 3. Display files to be created with confirmation
 4. Generate JSON files
-5. Optional: Import to Ghost Inspector
+5. Generate `_notes.txt` for each domain
+6. Optional: Import to Ghost Inspector
    - Prompt for API key
    - Fetch and display available suites
    - User selects suite
    - Confirm before import
    - Execute API calls
+
+## Validation
+
+The script includes comprehensive input validation:
+
+| Check | Behavior |
+|-------|----------|
+| Missing dependencies | Exits with install instructions if `jq` or `curl` not found |
+| Invalid URL format | Skips URLs not starting with `http://` or `https://` |
+| Duplicate URLs | Skips exact duplicate URLs |
+| Duplicate filenames | Skips URLs that would produce the same output file |
+| Invalid JSON template | Exits if custom template is not valid JSON |
+| Missing placeholders | Exits if template lacks `TEST_NAME` or `START_URL` |
+| Whitespace in URLs | Automatically trims leading/trailing whitespace |
+| File overwrites | Shows `[OVERWRITE]` warning for existing files |
 
 ## Dependencies
 
