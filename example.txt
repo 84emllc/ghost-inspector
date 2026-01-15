@@ -1,0 +1,211 @@
+Ghost Inspector Test Generator - Example Run
+==============================================
+
+This example demonstrates a complete run of the script with various scenarios:
+- Valid URLs (mixed domains)
+- Invalid URLs (skipped with warning)
+- Duplicate URLs (skipped with warning)
+- Existing files (overwrite warning)
+- Final output with _notes.txt generation
+
+$ ./generate-tests.sh
+
+Ghost Inspector Test Generator
+===============================
+
+Template options:
+
+  1) Use templates/template.json (default)
+     Recommended for most tests
+     - Visual regression testing (10% threshold)
+     - Screenshot comparison enabled
+     - Manual test execution
+     - Scrolls page 50px to trigger lazy-loaded content
+     See: templates/template.md for detailed settings
+
+  2) Paste custom template
+     Provide your own JSON configuration
+     Must contain TEST_NAME and START_URL placeholders
+
+Select option [1]: 1
+
+Using templates/template.json
+
+Paste your URLs (one per line).
+Press Enter on an empty line when done:
+
+https://example.com/
+https://example.com/
+https://not-a-url
+  https://example.com/about/
+https://example.com/products/
+https://example.com/products/
+https://other-site.com/
+https://other-site.com/contact/
+
+Warning: Skipped 1 invalid URL(s):
+  Line 3: https://not-a-url
+
+Warning: Skipped 2 duplicate URL(s):
+  https://example.com/
+  https://example.com/products/
+
+The following test files will be created:
+-----------------------------------------
+  build/example.com/Home.json  <--  https://example.com/  [OVERWRITE]
+  build/example.com/About.json  <--  https://example.com/about/
+  build/example.com/Products.json  <--  https://example.com/products/
+  build/other-site.com/Home.json  <--  https://other-site.com/
+  build/other-site.com/Contact.json  <--  https://other-site.com/contact/
+
+Warning: 1 file(s) will be overwritten.
+
+Total: 5 test(s)
+
+Proceed with file creation? (y/n): y
+
+Creating test files...
+  Created: build/example.com/Home.json
+  Created: build/example.com/About.json
+  Created: build/example.com/Products.json
+  Created: build/other-site.com/Home.json
+  Created: build/other-site.com/Contact.json
+
+Done! Created 5 test file(s).
+
+Generating notes...
+  Created: build/example.com/_notes.txt
+  Created: build/other-site.com/_notes.txt
+
+Import tests to Ghost Inspector suite? (y/n): y
+
+Enter API Key:
+
+Fetching suites from Ghost Inspector...
+
+Available suites:
+-----------------
+  1) Production Tests (suite_abc123)
+  2) Staging Tests (suite_def456)
+  3) Development (suite_ghi789)
+
+Select suite [1-3]: 1
+
+Selected: Production Tests (suite_abc123)
+
+Import 5 test(s) to this suite? (y/n): y
+
+Importing tests to Ghost Inspector...
+
+  Importing example.com/Home.json... OK
+  Importing example.com/About.json... OK
+  Importing example.com/Products.json... OK
+  Importing other-site.com/Home.json... OK
+  Importing other-site.com/Contact.json... OK
+
+Import complete!
+  Success: 5
+  Failed:  0
+
+
+Generated Output Structure
+==========================
+
+build/
+├── example.com/
+│   ├── _notes.txt
+│   ├── Home.json
+│   ├── About.json
+│   └── Products.json
+└── other-site.com/
+    ├── _notes.txt
+    ├── Home.json
+    └── Contact.json
+
+
+Example _notes.txt (build/example.com/_notes.txt)
+===================================================
+
+# example.com
+
+**Last Run:** 2026-01-15 14:32:05
+**Template:** template.json
+
+---
+
+## Tests
+
+| File | Test Name | URL |
+|------|-----------|-----|
+| Home.json | Home | https://example.com/ |
+| About.json | About | https://example.com/about/ |
+| Products.json | Products | https://example.com/products/ |
+
+---
+
+## Settings
+
+| Setting | Value |
+|---------|-------|
+| Screenshot Compare | enabled |
+| Screenshot Threshold | 0.1 |
+| Fail on JS Error | default |
+| Auto Retry | default |
+| Browser | default |
+| Viewport | default |
+| Region | default |
+| Test Frequency | manual |
+| Disallow Insecure Certs | default |
+| Max Ajax Delay | default |
+| Max Wait Delay | default |
+| Final Delay | default |
+| Global Step Delay | default |
+
+---
+
+## HTTP Headers
+
+None
+
+---
+
+## Steps (1)
+
+1. **eval** - `document.addEventListener('DOMContentLoaded', function() {window.scrollBy({top: 50});});`
+
+
+Key Points from This Example
+=============================
+
+1. VALIDATION
+   - Invalid URL format rejected: "https://not-a-url"
+   - Exact duplicates skipped: 2 occurrences of https://example.com/
+   - Whitespace automatically trimmed: "  https://example.com/about/  "
+
+2. DOMAIN ORGANIZATION
+   - Files grouped by domain: example.com/ and other-site.com/
+   - Each domain gets its own _notes.txt
+   - Easy to manage multiple domains in one run
+
+3. OVERWRITE WARNING
+   - Shows [OVERWRITE] indicator for existing files
+   - Warning displayed before confirmation
+   - Single confirmation required (not per-file)
+
+4. NOTES GENERATION
+   - Automatic markdown file per domain
+   - Contains run timestamp and template used
+   - Documents all test files and settings
+   - Useful for tracking when tests were created
+
+5. API IMPORT
+   - Dynamic suite fetching (not manual entry)
+   - Shows available suites
+   - Allows suite selection from list
+   - Success/failure reported per import
+
+6. ERROR HANDLING
+   - Script continues despite warnings
+   - Reports invalid/duplicate URLs
+   - Proceeds with valid URLs
+   - No silent failures

@@ -3,9 +3,13 @@
 
 # Except these
 !.gitignore
-!template.json
 !generate-tests.sh
 !AGENTS.md
 !CHANGELOG.md
 !README.md
 !CLAUDE.md
+!example.txt
+!VERSION
+!templates/
+!templates/template.json
+!templates/template.md
