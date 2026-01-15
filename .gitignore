@@ -13,3 +13,5 @@
 !templates/
 !templates/template.json
 !templates/template.md
+!assets/
+!assets/*.png

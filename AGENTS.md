@@ -40,6 +40,55 @@ Use this example to understand:
 
 See `example.txt` in root directory or linked in README.md.
 
+## Exporting Test Settings from Ghost Inspector
+
+**File:** `assets/screenshot-export-test.png`
+
+Visual guide showing how to export existing Ghost Inspector test configurations as JSON for bulk generation.
+
+**What the Screenshot Shows:**
+
+The Ghost Inspector UI for a test (example: "About" page test) with the **More** menu expanded, highlighting:
+
+1. **Test Navigation** - Breadcrumb showing: Dashboard > Suite > Domain > Test
+2. **Test Management Tabs** - Quick access to Suite schedule, Settings, Edit steps
+3. **More Menu Options** - Dropdown menu showing:
+   - Run test w/custom settings
+   - Run test w/spreadsheet data
+   - **Export test** (highlighted) - Downloads test JSON configuration
+   - Duplicate test
+
+**Why This Matters:**
+
+- **Reuse Existing Tests** - Export a well-configured test from Ghost Inspector, then use it as a template for bulk generation
+- **Custom Templates** - Export JSON, modify it, then provide as custom template (option 2) during script run
+- **Test Standardization** - Export a reference test, use across multiple domains/URLs
+- **Consistency** - Ensure all bulk-generated tests use identical settings (screenshot thresholds, browser, viewport, etc.)
+
+**How to Use:**
+
+1. Create a reference test in Ghost Inspector with desired settings
+2. Click **More** > **Export test**
+3. Download JSON file
+4. Use in script as:
+   - Direct custom template (paste JSON when prompted)
+   - Edit JSON to customize and save as custom template file
+   - Extract specific settings to modify default template.json
+
+**Integration Workflow:**
+
+```
+Ghost Inspector Test (configured)
+         ↓ (export)
+    JSON File
+         ↓ (use as)
+   Custom Template
+         ↓ (script option 2)
+Bulk Generate Tests
+```
+
+See `assets/screenshot-export-test.png` for visual reference.
+
 ## URL to Filename Convention
 
 | URL Pattern | Filename | Test Name |

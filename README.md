@@ -156,6 +156,18 @@ Example: `https://example.com/products/widgets/`
 - `TEST_NAME` becomes `Products / Widgets`
 - `START_URL` becomes `https://example.com/products/widgets/`
 
+## Exporting Test Settings from Ghost Inspector
+
+To export existing test configurations as JSON for use with this script:
+
+1. Open Ghost Inspector test
+2. Click **More** menu (top right)
+3. Select **Export test**
+4. Download JSON file
+5. Use as custom template (option 2 in script) or modify for bulk generation
+
+See [assets/screenshot-export-test.png](assets/screenshot-export-test.png) for visual walkthrough.
+
 ## License
 
 MIT
