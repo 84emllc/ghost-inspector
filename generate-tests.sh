@@ -26,8 +26,18 @@ echo "Ghost Inspector Test Generator"
 echo "==============================="
 echo ""
 echo "Template options:"
-echo "  1) Use template.json (default)"
+echo ""
+echo "  1) Use templates/template.json (default)"
+echo "     Recommended for most tests"
+echo "     - Visual regression testing (10% threshold)"
+echo "     - Screenshot comparison enabled"
+echo "     - Manual test execution"
+echo "     - Scrolls page 50px to trigger lazy-loaded content"
+echo "     See: templates/template.md for detailed settings"
+echo ""
 echo "  2) Paste custom template"
+echo "     Provide your own JSON configuration"
+echo "     Must contain TEST_NAME and START_URL placeholders"
 echo ""
 read -p "Select option [1]: " template_option
 
@@ -70,13 +80,13 @@ if [[ "$template_option" == "2" ]]; then
 else
     # Check template exists
     if [[ ! -f "$TEMPLATE_FILE" ]]; then
-        echo "Error: template.json not found in ${SCRIPT_DIR}"
+        echo "Error: templates/template.json not found"
         exit 1
     fi
 
     TEMPLATE=$(cat "$TEMPLATE_FILE")
     echo ""
-    echo "Using template.json"
+    echo "Using templates/template.json"
 fi
 
 # Validate template placeholders
